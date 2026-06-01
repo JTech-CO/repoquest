@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>RepoQuest</title>
+    <!--
+      GitHub Pages 는 SPA 의 딥링크(/repoquest/octocat/spoon-knife 등)에서 404 를 반환한다.
+      이 페이지가 그 404 를 받아, 경로를 쿼리스트링으로 인코딩한 뒤 base(index.html)로 리다이렉트한다.
+      index.html 의 디코딩 스크립트가 원래 경로를 history 에 복원한다.
+      (rafgraph/spa-github-pages 방식. pathSegmentsToKeep=1 은 '/repoquest' 세그먼트를 보존한다.)
+    -->
+    <script type="text/javascript">
+      var pathSegmentsToKeep = 1;
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname
+            .split('/')
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join('/') +
+          '/?/' +
+          l.pathname
+            .slice(1)
+            .split('/')
+            .slice(pathSegmentsToKeep)
+            .join('/')
+            .replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash,
+      );
+    </script>
+  </head>
+  <body></body>
+</html>

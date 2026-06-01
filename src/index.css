@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-canvas-default text-fg-default font-sans antialiased;
+}
+
+/* 듀얼 페인 가운데 화살표 애니메이션(후속 Phase에서 실제로 활용) */
+@keyframes flow-arrow {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 1;
+  }
+}
+
+/* ───────────────────────────── 마크다운(README) ─────────────────────────────
+   GitHub 다크 .markdown-body 근사. 문구/톤 조정은 여기서. */
+@layer components {
+  .md-body {
+    @apply text-fg-default text-[15px] leading-7 break-words;
+  }
+  .md-body > *:first-child {
+    @apply mt-0;
+  }
+  .md-body h1 {
+    @apply text-2xl font-semibold mt-6 mb-4 pb-2 border-b border-border-muted;
+  }
+  .md-body h2 {
+    @apply text-xl font-semibold mt-6 mb-3 pb-2 border-b border-border-muted;
+  }
+  .md-body h3 {
+    @apply text-lg font-semibold mt-5 mb-2;
+  }
+  .md-body h4 {
+    @apply text-base font-semibold mt-4 mb-2;
+  }
+  .md-body p {
+    @apply my-3;
+  }
+  .md-body a {
+    @apply text-accent-fg hover:underline;
+  }
+  .md-body ul {
+    @apply list-disc pl-6 my-3 space-y-1;
+  }
+  .md-body ol {
+    @apply list-decimal pl-6 my-3 space-y-1;
+  }
+  .md-body li {
+    @apply leading-7;
+  }
+  .md-body code {
+    @apply rounded bg-canvas-inset px-1.5 py-0.5 text-[85%] font-mono;
+  }
+  .md-body pre {
+    @apply rounded bg-canvas-inset p-4 my-3 overflow-x-auto;
+  }
+  .md-body pre code {
+    @apply bg-transparent p-0 text-[90%];
+  }
+  .md-body blockquote {
+    @apply border-l-4 border-border-default pl-4 text-fg-muted my-3;
+  }
+  .md-body table {
+    @apply border-collapse my-3 block w-max max-w-full overflow-auto;
+  }
+  .md-body th,
+  .md-body td {
+    @apply border border-border-default px-3 py-1.5;
+  }
+  .md-body th {
+    @apply bg-canvas-subtle font-semibold;
+  }
+  .md-body hr {
+    @apply my-4 border-t border-border-muted;
+  }
+  .md-body img {
+    @apply max-w-full;
+  }
+  .md-body input[type='checkbox'] {
+    @apply mr-1 align-middle;
+  }
+}

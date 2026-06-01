@@ -1,0 +1,30 @@
+# Node
+node_modules/
+
+# Vite
+dist/
+dist-ssr/
+*.local
+
+# tsc 가 실수로 emit 한 config 산출물(vite.config.ts → .js/.d.ts). 이게 있으면
+# vite 가 .ts 대신 stale .js 를 읽어버린다(우선순위 .js > .ts).
+vite.config.js
+vite.config.d.ts
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
