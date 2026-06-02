@@ -18,16 +18,28 @@ describe('seedWorld', () => {
   it('현재 사용자 + 가짜 유저들이 등록되어 있다', () => {
     const w = seedWorld('me');
     expect(Object.keys(w.users)).toEqual(
-      expect.arrayContaining(['me', 'octocat', 'torvalds', 'monalisa']),
+      expect.arrayContaining([
+        'me',
+        'octocat',
+        'torvalds',
+        'lbianchi',
+        'jwpark',
+        'anasouza',
+      ]),
     );
     expect(w.currentUser).toBe('me');
   });
 
-  it('레포 개수는 KICKOFF 가 명시한 3~5 범위 안', () => {
+  it('레포가 6개 시드된다', () => {
     const w = seedWorld();
-    const n = Object.keys(w.remoteRepos).length;
-    expect(n).toBeGreaterThanOrEqual(3);
-    expect(n).toBeLessThanOrEqual(5);
+    expect(Object.keys(w.remoteRepos).length).toBe(6);
+  });
+
+  it('각 레포 owner 가 users 에 등록되어 있다', () => {
+    const w = seedWorld();
+    for (const repo of Object.values(w.remoteRepos)) {
+      expect(w.users[repo.owner], `${repo.id} owner ${repo.owner}`).toBeDefined();
+    }
   });
 
   it('각 레포의 default branch tip 이 실제 commits 에 존재한다', () => {
