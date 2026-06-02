@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GitBranchIcon, SearchIcon, MortarBoardIcon } from '@primer/octicons-react';
 
 import { useWorld } from '../../store/world';
-import { resetWorld } from '../../store/persist';
 import { evaluateMissions } from '../../tutorial/missions';
 import { useCoach } from '../coach/coachStore';
 import Avatar from '../common/Avatar';
@@ -11,7 +10,8 @@ import Avatar from '../common/Avatar';
 // 글로벌 헤더.
 // - 좌측: 독자 브랜드(RepoQuest) + 비공식 배지 — GitHub 로고/이름을 그대로 쓰지 않는다.
 // - 가운데: 검색창(Enter → /search?q=).
-// - 우측: 미션 진행 배지(코칭 패널 토글) · 리셋 · 내 프로필 아바타.
+// - 우측: 미션 진행 배지(코칭 패널 토글) · 내 프로필 아바타.
+//   (초기화는 프로필 페이지의 '초기화' 섹션으로 일원화)
 export default function Header() {
   const navigate = useNavigate();
   const currentUser = useWorld((s) => s.currentUser);
@@ -27,17 +27,6 @@ export default function Header() {
     e.preventDefault();
     const term = q.trim();
     navigate(term ? `/search?q=${encodeURIComponent(term)}` : '/search');
-  }
-
-  function doReset() {
-    if (
-      window.confirm(
-        '실험 리셋: 모든 진행(레포·커밋·로컬 작업·미션)을 초기 시드 상태로 되돌립니다. 계속할까요?',
-      )
-    ) {
-      resetWorld();
-      navigate('/');
-    }
   }
 
   return (
@@ -78,14 +67,6 @@ export default function Header() {
           <span className="rounded-full bg-canvas-inset px-1.5 text-fg-muted">
             {done}/{total}
           </span>
-        </button>
-
-        <button
-          onClick={doReset}
-          title="실험 리셋(시드로 복귀)"
-          className="hidden sm:inline text-xs text-fg-muted hover:text-danger-fg"
-        >
-          리셋
         </button>
 
         <Link
