@@ -15,9 +15,34 @@
 **주요 기능**
 - **로컬 ↔ 원격 분리 시각화**: "내 컴퓨터(로컬)"와 "github.com(서버)"를 명확히 구분하고, `↑ahead`/`↓behind` 배지로 push·pull의 필요성을 스스로 깨닫게 합니다.
 - **세 트리 워크플로**: 작업 디렉터리 → 스테이징 → HEAD의 이동을 컬럼으로 보여주고, 버튼을 누르면 대응하는 git 명령이 미니 터미널에 미러링됩니다.
-- **협업 시뮬레이션**: Fork·Clone·Push·Fetch·Pull, Pull Request(fast-forward/merge commit/squash), Issue, 머지 충돌 해소까지 전 흐름을 체험합니다.
-- **게임형 코칭**: 가이드 미션 8단계(자동 판정) + 개념 카드 20종 + 진행도 영속화(localStorage) + 실험 리셋.
-- **GitHub 다크 테마 UI**: Primer 디자인 토큰·Octicons 기반의 반응형 인터페이스.
+- **협업 시뮬레이션**: Fork·Clone·Push·Fetch·Pull, Pull Request(fast-forward / merge commit / squash), Issue, 머지 충돌 해소까지 전 흐름을 체험합니다.
+- **게임형 코칭**: 가이드 미션 8단계(자동 판정) + 개념 카드 20종 + 진행도 localStorage 영속화 + 프로필 페이지에서 실험 초기화.
+- **둘러보기용 시드 저장소 6개**: 다양한 언어·시대를 담아 탐색 흥미를 높였습니다(아래 참고).
+- **GitHub 다크 테마 UI**: Primer 디자인 토큰·Octicons 기반의 인터페이스.
+
+### 학습 미션 (8단계)
+
+순서대로 따라가며 `World` 상태로 자동 판정됩니다.
+
+1. **저장소 둘러보기** — 검색 → README 읽기
+2. **Fork** — 남의 레포를 내 계정으로 (서버 안에서만 복사)
+3. **Clone** — fork를 내 컴퓨터로 (이제야 파일이 로컬에)
+4. **브랜치 → 수정 → Add → Commit** — 세 트리를 거쳐 로컬에 기록
+5. **Push** — 그제서야 GitHub 서버에 반영 (`↑` 배지가 사라짐)
+6. **Pull Request** — 내 변경을 원본에 합치자고 제안
+7. **Issue** — 버그·제안 기록
+8. **머지 충돌 해소** — 일부러 충돌을 만들고 마커를 정리해 마무리
+
+### 둘러볼 수 있는 시드 저장소
+
+| 저장소 | 작성자 | 내용 |
+|---|---|---|
+| `octocat/spoon-knife` | octocat | Fork→Clone→PR 실습용 원본 (미션의 무대) |
+| `octocat/Hello-World` | octocat | 가장 기본적인 JS 저장소 |
+| `torvalds/linux` | torvalds | C 커널 데모 + 브랜치 2개 |
+| `lbianchi/signal-toolbox` | 🇮🇹 | MATLAB 신호처리(FFT/FIR/스펙트로그램) + 기존 PR·Issue |
+| `jwpark/ledger-cobol` | 🇰🇷 | COBOL 금융 원장 배치(2014, 기본 브랜치 `master`) |
+| `anasouza/leaf-classifier` | 🇧🇷 | PyTorch 잎 이미지 분류 CNN |
 
 ## 2. 기술 스택 (Tech Stack)
 
