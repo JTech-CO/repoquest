@@ -305,29 +305,29 @@ function buildSignalToolbox(): RemoteRepo {
   const objects = emptyStore();
 
   const README =
-    '# signal-toolbox\n\nMATLAB 신호처리 툴박스. FFT 분석, FIR 필터, 스펙트로그램을 제공합니다.\n\n## 함수\n- `fft_analyze` — 단측 진폭 스펙트럼\n- `fir_filter` — 윈도우 기반 저역통과 FIR 필터\n- `spectrogram_plot` — STFT 스펙트로그램\n\n## 예제\n```matlab\nFs = 1000;\nt = 0:1/Fs:1-1/Fs;\nx = sin(2*pi*50*t) + 0.5*sin(2*pi*120*t);\n[f, amp] = fft_analyze(x, Fs);\nplot(f, amp);\n```';
+    '# signal-toolbox\n\nA MATLAB toolbox for signal processing: FFT analysis, FIR filtering and spectrograms.\n\n## Functions\n- `fft_analyze` — single-sided amplitude spectrum\n- `fir_filter` — windowed-sinc low-pass FIR filter\n- `spectrogram_plot` — STFT spectrogram\n\n## Example\n```matlab\nFs = 1000;\nt = 0:1/Fs:1-1/Fs;\nx = sin(2*pi*50*t) + 0.5*sin(2*pi*120*t);\n[f, amp] = fft_analyze(x, Fs);\nplot(f, amp);\n```';
   const FFT =
-    'function [f, amp] = fft_analyze(x, Fs)\n%FFT_ANALYZE 단측 진폭 스펙트럼을 계산한다.\n%   [f, amp] = fft_analyze(x, Fs)\n    x = x(:).\';\n    N = length(x);\n    X = fft(x);\n    P2 = abs(X / N);\n    P1 = P2(1:floor(N/2)+1);\n    P1(2:end-1) = 2 * P1(2:end-1);\n    f = Fs * (0:floor(N/2)) / N;\n    amp = P1;\nend';
+    'function [f, amp] = fft_analyze(x, Fs)\n%FFT_ANALYZE Single-sided amplitude spectrum.\n%   [f, amp] = fft_analyze(x, Fs)\n    x = x(:).\';\n    N = length(x);\n    X = fft(x);\n    P2 = abs(X / N);\n    P1 = P2(1:floor(N/2)+1);\n    P1(2:end-1) = 2 * P1(2:end-1);\n    f = Fs * (0:floor(N/2)) / N;\n    amp = P1;\nend';
   const FIR =
-    'function y = fir_filter(x, cutoff, Fs, order)\n%FIR_FILTER 윈도우 기반 저역통과 FIR 필터.\n    if nargin < 4, order = 64; end\n    fc = cutoff / (Fs / 2);\n    n = 0:order;\n    h = sinc(fc * (n - order/2)) * fc;\n    h = h .* hamming(order + 1)\';\n    h = h / sum(h);\n    y = conv(x, h, \'same\');\nend';
+    'function y = fir_filter(x, cutoff, Fs, order)\n%FIR_FILTER Windowed-sinc low-pass FIR filter.\n    if nargin < 4, order = 64; end\n    fc = cutoff / (Fs / 2);\n    n = 0:order;\n    h = sinc(fc * (n - order/2)) * fc;\n    h = h .* hamming(order + 1)\';\n    h = h / sum(h);\n    y = conv(x, h, \'same\');\nend';
   const SPEC =
-    'function spectrogram_plot(x, Fs, win, hop)\n%SPECTROGRAM_PLOT STFT 기반 스펙트로그램을 그린다.\n    if nargin < 3, win = 256; end\n    if nargin < 4, hop = win / 2; end\n    frames = 1 + floor((length(x) - win) / hop);\n    S = zeros(win, frames);\n    w = hann_window(win);\n    for k = 1:frames\n        seg = x((k-1)*hop + (1:win)) .* w;\n        S(:, k) = abs(fft(seg));\n    end\n    imagesc(20*log10(S(1:win/2, :) + eps));\n    axis xy; xlabel(\'Frame\'); ylabel(\'Frequency bin\');\nend';
+    'function spectrogram_plot(x, Fs, win, hop)\n%SPECTROGRAM_PLOT STFT-based spectrogram.\n    if nargin < 3, win = 256; end\n    if nargin < 4, hop = win / 2; end\n    frames = 1 + floor((length(x) - win) / hop);\n    S = zeros(win, frames);\n    w = hann_window(win);\n    for k = 1:frames\n        seg = x((k-1)*hop + (1:win)) .* w;\n        S(:, k) = abs(fft(seg));\n    end\n    imagesc(20*log10(S(1:win/2, :) + eps));\n    axis xy; xlabel(\'Frame\'); ylabel(\'Frequency bin\');\nend';
   const HANN =
-    'function w = hann_window(N)\n%HANN_WINDOW 길이 N 의 Hann 윈도우.\n    n = 0:N-1;\n    w = 0.5 * (1 - cos(2*pi*n / (N-1)));\n    w = w(:);\nend';
+    'function w = hann_window(N)\n%HANN_WINDOW Hann window of length N.\n    n = 0:N-1;\n    w = 0.5 * (1 - cos(2*pi*n / (N-1)));\n    w = w(:);\nend';
   const DEMO =
-    '% examples/demo.m — 두 정현파 합성 신호의 스펙트럼\nFs = 1000;\nt = 0:1/Fs:1-1/Fs;\nx = sin(2*pi*50*t) + 0.5*sin(2*pi*120*t);\n\n[f, amp] = fft_analyze(x, Fs);\nfigure; plot(f, amp); title(\'Single-Sided Amplitude Spectrum\');\nxlabel(\'f (Hz)\'); ylabel(\'|P1(f)|\');';
+    '% examples/demo.m — spectrum of a two-tone signal\nFs = 1000;\nt = 0:1/Fs:1-1/Fs;\nx = sin(2*pi*50*t) + 0.5*sin(2*pi*120*t);\n\n[f, amp] = fft_analyze(x, Fs);\nfigure; plot(f, amp); title(\'Single-Sided Amplitude Spectrum\');\nxlabel(\'f (Hz)\'); ylabel(\'|P1(f)|\');';
   const LICENSE = 'MIT License\n\nCopyright (c) 2022 Lorenzo Bianchi\n';
 
   const main = commitChain(objects, [
     {
-      files: { 'README.md': '# signal-toolbox\n\nMATLAB 신호처리 툴박스.', 'fft_analyze.m': FFT },
+      files: { 'README.md': '# signal-toolbox\n\nA MATLAB toolbox for signal processing.', 'fft_analyze.m': FFT },
       author: 'lbianchi',
       message: 'Initial commit: FFT analysis',
       timestamp: T(2022, 9, 4),
     },
     {
       files: {
-        'README.md': '# signal-toolbox\n\nMATLAB 신호처리 툴박스.\n\n- fft_analyze\n- fir_filter',
+        'README.md': '# signal-toolbox\n\nA MATLAB toolbox for signal processing.\n\n- fft_analyze\n- fir_filter',
         'fft_analyze.m': FFT,
         'fir_filter.m': FIR,
         'LICENSE': LICENSE,
@@ -360,7 +360,7 @@ function buildSignalToolbox(): RemoteRepo {
     'spectrogram_plot.m': SPEC,
     'hann_window.m': HANN,
     'kaiser_window.m':
-      'function w = kaiser_window(N, beta)\n%KAISER_WINDOW Kaiser 윈도우(조절 가능한 사이드로브).\n    if nargin < 2, beta = 8.6; end\n    n = 0:N-1;\n    alpha = (N-1)/2;\n    arg = beta * sqrt(1 - ((n - alpha)/alpha).^2);\n    w = besseli(0, arg) / besseli(0, beta);\n    w = w(:);\nend',
+      'function w = kaiser_window(N, beta)\n%KAISER_WINDOW Kaiser window (adjustable side-lobe level).\n    if nargin < 2, beta = 8.6; end\n    n = 0:N-1;\n    alpha = (N-1)/2;\n    arg = beta * sqrt(1 - ((n - alpha)/alpha).^2);\n    w = besseli(0, arg) / besseli(0, beta);\n    w = w(:);\nend',
     'examples/demo.m': DEMO,
     'LICENSE': LICENSE,
   });
@@ -377,15 +377,15 @@ function buildSignalToolbox(): RemoteRepo {
       id: 'iss_signal-toolbox_1',
       number: 1,
       author: 'gferrari',
-      title: 'fft_analyze가 홀수 길이 신호에서 마지막 bin을 두 배로 만듭니다',
-      body: '길이가 홀수인 신호를 넣으면 Nyquist bin이 없는데도 `P1(2:end-1)`에서 마지막 항이 잘못 스케일됩니다. 재현:\n```matlab\nx = randn(1, 101);\n[f, amp] = fft_analyze(x, 1000);\n```',
+      title: 'fft_analyze doubles the last bin for odd-length signals',
+      body: 'For odd-length inputs there is no Nyquist bin, yet `P1(2:end-1)` still scales the last term. Repro:\n```matlab\nx = randn(1, 101);\n[f, amp] = fft_analyze(x, 1000);\n```',
       state: 'open',
       labels: ['bug'],
       comments: [
         comment(
           'iss_signal-toolbox_1_c1',
           'lbianchi',
-          'Confirmed. 홀수/짝수 길이를 나눠 처리하도록 수정하겠습니다. 제보 감사합니다 🙏',
+          'Confirmed. I will handle odd/even lengths separately. Thanks for the report 🙏',
           T(2023, 2, 20, 10),
         ),
       ],
@@ -395,8 +395,8 @@ function buildSignalToolbox(): RemoteRepo {
       id: 'iss_signal-toolbox_2',
       number: 2,
       author: 'lbianchi',
-      title: 'README에 함수별 입출력 설명 추가',
-      body: '각 함수의 인자와 반환값을 표로 정리하면 좋겠습니다.',
+      title: 'Add per-function input/output docs to README',
+      body: 'A table summarizing the arguments and return values of each function would help.',
       state: 'closed',
       labels: ['documentation'],
       comments: [],
@@ -410,7 +410,7 @@ function buildSignalToolbox(): RemoteRepo {
       number: 3,
       author: 'gferrari',
       title: 'Add Kaiser window option',
-      body: 'Hann 외에 Kaiser 윈도우를 추가합니다. beta로 사이드로브 레벨을 조절할 수 있어 스펙트로그램 분석에 유용합니다.',
+      body: 'Adds a Kaiser window in addition to Hann. The beta parameter controls the side-lobe level, which is useful for spectrogram analysis.',
       state: 'open',
       sourceRepoId: 'repo_signal-toolbox',
       sourceBranch: 'feature/kaiser-window',
@@ -419,7 +419,7 @@ function buildSignalToolbox(): RemoteRepo {
         comment(
           'pr_signal-toolbox_3_c1',
           'lbianchi',
-          'spectrogram_plot에서 윈도우를 선택할 수 있게 인자로 받으면 더 좋겠어요. 그 부분만 보완 부탁드립니다.',
+          'Could spectrogram_plot take the window as an argument so it can be selected? Just that part needs a follow-up.',
           T(2023, 3, 3, 14),
         ),
       ],
@@ -544,24 +544,24 @@ function buildLeafClassifier(): RemoteRepo {
 
   const REQ = 'numpy>=1.24\ntorch>=2.0\ntorchvision>=0.15\nscikit-learn>=1.3\ntqdm>=4.66';
   const DATASET =
-    'import os\nfrom torch.utils.data import Dataset\nfrom torchvision import transforms\nfrom PIL import Image\n\n\nclass LeafDataset(Dataset):\n    """디렉터리 구조(class_name/*.jpg)에서 잎 이미지를 읽는다."""\n\n    def __init__(self, root, train=True):\n        self.samples = []\n        self.classes = sorted(os.listdir(root))\n        self.class_to_idx = {c: i for i, c in enumerate(self.classes)}\n        for c in self.classes:\n            for fn in os.listdir(os.path.join(root, c)):\n                self.samples.append((os.path.join(root, c, fn), self.class_to_idx[c]))\n        self.tf = transforms.Compose([\n            transforms.Resize((128, 128)),\n            transforms.RandomHorizontalFlip() if train else transforms.Lambda(lambda x: x),\n            transforms.ToTensor(),\n        ])\n\n    def __len__(self):\n        return len(self.samples)\n\n    def __getitem__(self, i):\n        path, label = self.samples[i]\n        return self.tf(Image.open(path).convert("RGB")), label';
+    'import os\nfrom torch.utils.data import Dataset\nfrom torchvision import transforms\nfrom PIL import Image\n\n\nclass LeafDataset(Dataset):\n    """Loads leaf images from a class-per-directory layout (class_name/*.jpg)."""\n\n    def __init__(self, root, train=True):\n        self.samples = []\n        self.classes = sorted(os.listdir(root))\n        self.class_to_idx = {c: i for i, c in enumerate(self.classes)}\n        for c in self.classes:\n            for fn in os.listdir(os.path.join(root, c)):\n                self.samples.append((os.path.join(root, c, fn), self.class_to_idx[c]))\n        self.tf = transforms.Compose([\n            transforms.Resize((128, 128)),\n            transforms.RandomHorizontalFlip() if train else transforms.Lambda(lambda x: x),\n            transforms.ToTensor(),\n        ])\n\n    def __len__(self):\n        return len(self.samples)\n\n    def __getitem__(self, i):\n        path, label = self.samples[i]\n        return self.tf(Image.open(path).convert("RGB")), label';
   const MODEL =
-    'import torch.nn as nn\nimport torch.nn.functional as F\n\n\nclass LeafCNN(nn.Module):\n    """잎 이미지 분류를 위한 작은 CNN."""\n\n    def __init__(self, num_classes):\n        super().__init__()\n        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)\n        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)\n        self.pool = nn.MaxPool2d(2, 2)\n        self.fc1 = nn.Linear(64 * 32 * 32, 128)\n        self.fc2 = nn.Linear(128, num_classes)\n        self.dropout = nn.Dropout(0.3)\n\n    def forward(self, x):\n        x = self.pool(F.relu(self.conv1(x)))\n        x = self.pool(F.relu(self.conv2(x)))\n        x = x.flatten(1)\n        x = self.dropout(F.relu(self.fc1(x)))\n        return self.fc2(x)';
+    'import torch.nn as nn\nimport torch.nn.functional as F\n\n\nclass LeafCNN(nn.Module):\n    """A small CNN for leaf image classification."""\n\n    def __init__(self, num_classes):\n        super().__init__()\n        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)\n        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)\n        self.pool = nn.MaxPool2d(2, 2)\n        self.fc1 = nn.Linear(64 * 32 * 32, 128)\n        self.fc2 = nn.Linear(128, num_classes)\n        self.dropout = nn.Dropout(0.3)\n\n    def forward(self, x):\n        x = self.pool(F.relu(self.conv1(x)))\n        x = self.pool(F.relu(self.conv2(x)))\n        x = x.flatten(1)\n        x = self.dropout(F.relu(self.fc1(x)))\n        return self.fc2(x)';
   const TRAIN =
     'import torch\nfrom torch.utils.data import DataLoader\nfrom tqdm import tqdm\n\nfrom dataset import LeafDataset\nfrom model import LeafCNN\n\n\ndef train(root="data", epochs=10, lr=1e-3, batch=32):\n    ds = LeafDataset(root, train=True)\n    dl = DataLoader(ds, batch_size=batch, shuffle=True)\n    device = "cuda" if torch.cuda.is_available() else "cpu"\n    model = LeafCNN(len(ds.classes)).to(device)\n    opt = torch.optim.Adam(model.parameters(), lr=lr)\n    loss_fn = torch.nn.CrossEntropyLoss()\n\n    for epoch in range(epochs):\n        model.train()\n        total = 0.0\n        for x, y in tqdm(dl, desc=f"epoch {epoch+1}/{epochs}"):\n            x, y = x.to(device), y.to(device)\n            opt.zero_grad()\n            loss = loss_fn(model(x), y)\n            loss.backward()\n            opt.step()\n            total += loss.item()\n        print(f"epoch {epoch+1}: loss={total/len(dl):.4f}")\n    torch.save(model.state_dict(), "leaf_cnn.pt")\n\n\nif __name__ == "__main__":\n    train()';
   const README =
-    '# leaf-classifier\n\nPyTorch로 식물 잎 이미지를 분류하는 작은 CNN 프로젝트입니다.\n\n## 설치\n```bash\npip install -r requirements.txt\n```\n\n## 학습\n```bash\npython src/train.py        # data/<class>/<*.jpg> 구조를 기대\n```\n\n## 구성\n- `src/dataset.py` — 이미지 폴더 → Dataset\n- `src/model.py`   — LeafCNN (Conv×2 + FC)\n- `src/train.py`   — 학습 루프\n\n정확도는 5개 클래스 기준 검증셋에서 약 92% 입니다.';
+    '# leaf-classifier\n\nA small PyTorch CNN that classifies plant leaf images.\n\n## Install\n```bash\npip install -r requirements.txt\n```\n\n## Train\n```bash\npython src/train.py        # expects a data/<class>/<*.jpg> layout\n```\n\n## Layout\n- `src/dataset.py` — image folder → Dataset\n- `src/model.py`   — LeafCNN (Conv×2 + FC)\n- `src/train.py`   — training loop\n\nValidation accuracy is about 92% on a 5-class split.';
 
   const chain = commitChain(objects, [
     {
-      files: { 'README.md': '# leaf-classifier\n\nPyTorch 잎 이미지 분류.', 'requirements.txt': REQ, 'src/model.py': MODEL },
+      files: { 'README.md': '# leaf-classifier\n\nPyTorch leaf image classification.', 'requirements.txt': REQ, 'src/model.py': MODEL },
       author: 'anasouza',
       message: 'Add CNN model',
       timestamp: T(2021, 7, 12),
     },
     {
       files: {
-        'README.md': '# leaf-classifier\n\nPyTorch 잎 이미지 분류.',
+        'README.md': '# leaf-classifier\n\nPyTorch leaf image classification.',
         'requirements.txt': REQ,
         'src/model.py': MODEL,
         'src/dataset.py': DATASET,
