@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "description": "백엔드 없이 브라우저에서 Git/GitHub 동작을 시뮬레이션하는 학습용 에뮬레이터 (비공식, GitHub과 무관).",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "rimraf dist && vite build",
