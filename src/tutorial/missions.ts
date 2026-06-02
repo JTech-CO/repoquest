@@ -242,7 +242,12 @@ export const missions: Mission[] = [
     ],
     takeaway:
       '작업본 → 스테이징 → 커밋의 세 단계를 거쳐야 이력에 남습니다. 그리고 커밋은 100% 로컬입니다. 서버엔 아직 안 갔어요.',
-    isComplete: (w) => hasNonDefaultLocalBranch(w) && hasUnpushedCommitByUser(w),
+    // 비기본 브랜치 + 사용자 커밋. push 전에는 로컬에만 있고(hasUnpushedCommitByUser),
+    // push 후에는 그 커밋이 origin에 올라가 unpushed가 아니게 되므로 hasPushedFeatureBranch로
+    // 받쳐 준다. 한 번 달성한 미션이 다음 단계(push)에서 풀리지 않도록(monotonic).
+    isComplete: (w) =>
+      hasNonDefaultLocalBranch(w) &&
+      (hasUnpushedCommitByUser(w) || hasPushedFeatureBranch(w)),
   },
   {
     id: 'push',
@@ -289,7 +294,7 @@ export const missions: Mission[] = [
   {
     id: 'conflict-boss',
     order: 8,
-    title: '머지 충돌 해소 (보스전)',
+    title: '머지 충돌 해소',
     brief:
       '일부러 충돌을 만든 뒤, 충돌 마커를 정리하고 머지를 완성하세요.',
     steps: [
